@@ -10,22 +10,21 @@ description: |
       - When using Wayland, forward WAYLAND_DISPLAY and XDG_RUNTIME_DIR, and
         mount XDG_RUNTIME_DIR at the same path inside the container.
 
-    The launcher defaults to X11 with --ozone-platform=x11. WAYLAND_DISPLAY
-    and the XDG_RUNTIME_DIR mount are required only when the module is
-    configured with wayland: true.
+    The launcher defaults to --ozone-platform=auto. Set display_backend to
+    x11 or wayland to require a specific display backend.
 args:
     optional:
-        - wayland
+        - display_backend
 requires:
     - ./curl.md
     - ./dbus.md
     - ./xdg.md
 ```
 ```dockerfile
-{% if wayland is defined and wayland is not bool %}
-    {{ throw(message="wayland must be true or false") }}
+{% set display_backend = display_backend | default(value="auto") %}
+{% if display_backend != "auto" and display_backend != "x11" and display_backend != "wayland" %}
+    {{ throw(message="display_backend must be auto, x11, or wayland") }}
 {% endif %}
-{% set wayland = wayland | default(value=false) %}
 
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
@@ -41,14 +40,19 @@ RUN printf '%s\n' \
         '#!/usr/bin/env bash' \
         'set -euo pipefail' \
         '' \
-{% if wayland %}
+{% if display_backend == "wayland" %}
         'if [[ -z "${WAYLAND_DISPLAY:-}" || -z "${XDG_RUNTIME_DIR:-}" ]]; then' \
         '    echo '"'"'WAYLAND_DISPLAY and XDG_RUNTIME_DIR are unset. Pass both host variables and mount XDG_RUNTIME_DIR at the same path inside the container.'"'"' >&2' \
         '    exit 1' \
         fi \
-{% else %}
+{% elif display_backend == "x11" %}
         'if [[ -z "${DISPLAY:-}" ]]; then' \
         '    echo '"'"'DISPLAY is unset. Pass the host DISPLAY and mount /tmp/.X11-unix into the container.'"'"' >&2' \
+        '    exit 1' \
+        fi \
+{% else %}
+        'if [[ -z "${DISPLAY:-}" && ( -z "${WAYLAND_DISPLAY:-}" || -z "${XDG_RUNTIME_DIR:-}" ) ]]; then' \
+        '    echo '"'"'No usable display environment was found. Configure either DISPLAY for X11, or WAYLAND_DISPLAY and XDG_RUNTIME_DIR for Wayland.'"'"' >&2' \
         '    exit 1' \
         fi \
 {% endif %}
@@ -63,7 +67,7 @@ RUN printf '%s\n' \
         '    exec dbus-run-session -- "$0" "$@"' \
         fi \
         '' \
-        'desktop_args=(--ozone-platform={% if wayland %}wayland{% else %}x11{% endif %} --disable-dev-shm-usage)' \
+        'desktop_args=(--ozone-platform={{ display_backend }} --disable-dev-shm-usage)' \
         '# Chromium refuses to run as root without this flag.' \
         'if (( EUID == 0 )); then' \
         '    desktop_args+=(--no-sandbox)' \
