@@ -4,15 +4,13 @@
 description: "codex-desktop"
 requires:
     - ./curl.md
+    - ./dbus.md
+    - ./xdg.md
 ```
 ```dockerfile
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
-        dbus \
-        dbus-x11 \
-        xdg-desktop-portal \
-        xdg-desktop-portal-gtk \
     && curl --proto '=https' --tlsv1.2 -fL --retry 3 \
         -o /tmp/chatgpt_amd64.deb \
         https://persistent.oaistatic.com/codex-app-prod/linux/deb/latest/chatgpt_amd64.deb \

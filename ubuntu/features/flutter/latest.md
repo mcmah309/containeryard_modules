@@ -13,6 +13,7 @@ args:
 requires:
   - ../curl.md
   - ../android/sdk/sdk.md
+  - ../xdg.md
 ```
 ```Dockerfile
 ARG flutter_ver={{ flutter_version | default (value="3.27.3") }}
@@ -94,8 +95,5 @@ RUN mkdir -p $FLUTTER_HOME \
     && echo '#!/bin/bash\n'"${ORIGINAL_CHROME_PATH}-bin"' --no-sandbox --headless "$@"' > /usr/bin/google-chrome \
     && chmod +x /usr/bin/google-chrome \
 
-## Need for packages
-# Needed by path provider find the write paths for the linux os
-    && apt-get install xdg-user-dirs \
     && rm -rf /var/lib/apt/lists/*
 ```
