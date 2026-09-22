@@ -10,8 +10,9 @@ description: |
       - When using Wayland, forward WAYLAND_DISPLAY and XDG_RUNTIME_DIR, and
         mount XDG_RUNTIME_DIR at the same path inside the container.
 
-    The launcher defaults to --ozone-platform=auto. Set display_backend to
-    x11 or wayland to require a specific display backend.
+    The launcher defaults to automatic display backend selection without an
+    Ozone platform flag. Set display_backend to x11 or wayland to require a
+    specific display backend.
 args:
     optional:
         - display_backend
@@ -67,7 +68,10 @@ RUN printf '%s\n' \
         '    exec dbus-run-session -- "$0" "$@"' \
         fi \
         '' \
-        'desktop_args=(--ozone-platform={{ display_backend }} --disable-dev-shm-usage)' \
+        'desktop_args=(--disable-dev-shm-usage)' \
+{% if display_backend != "auto" %}
+        'desktop_args+=(--ozone-platform={{ display_backend }})' \
+{% endif %}
         '# Chromium refuses to run as root without this flag.' \
         'if (( EUID == 0 )); then' \
         '    desktop_args+=(--no-sandbox)' \
