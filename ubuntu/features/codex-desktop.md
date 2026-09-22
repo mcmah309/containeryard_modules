@@ -19,9 +19,30 @@ RUN apt-get update \
     && rm -f /tmp/chatgpt_amd64.deb \
     && rm -rf /var/lib/apt/lists/*
 RUN printf '%s\n' \
-        '#!/bin/sh' \
-        'set -eu' \
-        'exec /usr/bin/chatgpt --no-sandbox --ozone-platform=x11 --disable-dev-shm-usage "$@"' \
+        '#!/usr/bin/env bash' \
+        'set -euo pipefail' \
+        '' \
+        'if [[ -z "${DISPLAY:-}" ]]; then' \
+        '    echo '"'"'DISPLAY is unset. Pass the host DISPLAY and mount /tmp/.X11-unix into the container.'"'"' >&2' \
+        '    exit 1' \
+        fi \
+        '' \
+        '# Reuse the container session bus, or create a private bus for this launch.' \
+        'if [[ -z "${DBUS_SESSION_BUS_ADDRESS:-}" && -S /tmp/dbus-session ]]; then' \
+        '    export DBUS_SESSION_BUS_ADDRESS=unix:path=/tmp/dbus-session' \
+        fi \
+        'if ! dbus-send --session --print-reply --reply-timeout=2000 \' \
+        '    --dest=org.freedesktop.DBus /org/freedesktop/DBus \' \
+        '    org.freedesktop.DBus.ListNames >/dev/null 2>&1; then' \
+        '    exec dbus-run-session -- "$0" "$@"' \
+        fi \
+        '' \
+        'desktop_args=(--ozone-platform=x11 --disable-dev-shm-usage)' \
+        '# Chromium refuses to run as root without this flag.' \
+        'if (( EUID == 0 )); then' \
+        '    desktop_args+=(--no-sandbox)' \
+        fi \
+        'exec /usr/bin/chatgpt "${desktop_args[@]}" "$@"' \
         > /usr/local/bin/codex-desktop \
     && chmod 0755 /usr/local/bin/codex-desktop \
     && mkdir -p /root/.local/share/applications \
