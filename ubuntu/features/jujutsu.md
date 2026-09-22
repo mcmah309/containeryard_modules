@@ -14,6 +14,8 @@ args:
         - email
     optional:
         - version # e.g `v0.35.0`
+requires:
+    - ./curl.md
 ```
 ```Dockerfile
 
@@ -22,7 +24,6 @@ RUN apt-get update -y \
     && apt-get install -y --no-install-recommends --no-install-suggests \
     git \
     openssh-client \
-    curl \
     {% if not version %}
     jq \
     {% endif %}

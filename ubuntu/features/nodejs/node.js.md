@@ -5,14 +5,11 @@ description: "Node.js"
 args:
     optional:
         - version
+requires:
+    - ../curl.md
 ```
 ```Dockerfile
-RUN apt-get update -y \
-    && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends --no-install-suggests \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
-    # set to 4, 5, 6, ... as needed
+# set to 4, 5, 6, ... as needed
 RUN v={{ version | default (value="24") }} \
     && curl -sL https://deb.nodesource.com/setup_$v.x | bash - \
     && apt install nodejs \

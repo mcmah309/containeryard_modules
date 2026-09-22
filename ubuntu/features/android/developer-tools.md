@@ -14,6 +14,8 @@ args:
     - ndk
     - cmake
     - include_emulator
+requires:
+  - ./sdk/sdk.md
 ```
 ```Dockerfile
 # https://docs.flutter.dev/reference/supported-platforms

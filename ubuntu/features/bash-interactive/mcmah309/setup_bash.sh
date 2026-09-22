@@ -17,7 +17,6 @@ apt-get update -y \
     bat \
     ripgrep \
     fzf \
-    curl \
     && rm -rf /var/lib/apt/lists/*
 
 cat > "${HOME:-/root}/.bashrc" <<- 'EOM'

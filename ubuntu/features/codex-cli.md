@@ -5,13 +5,10 @@ description: "codex-cli"
 args:
     optional:
         - no_sandbox
+requires:
+    - ./curl.md
 ```
 ```Dockerfile
-RUN apt-get update -y \
-    && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends --no-install-suggests \
-    curl \
-    && rm -rf /var/lib/apt/lists/*
 RUN curl -fsSL https://chatgpt.com/codex/install.sh | sh
 {% if no_sandbox is defined and no_sandbox is not bool %}
     {{ throw(message="no_sandbox must be true or false") }}

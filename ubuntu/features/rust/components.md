@@ -5,6 +5,8 @@ description: "Rust components like rustfmt"
 args:
   optional:
     - components
+requires:
+  - ./rustup.md
 ```
 ```Dockerfile
 RUN rustup component add {{ components | default (value="rustfmt clippy") }}

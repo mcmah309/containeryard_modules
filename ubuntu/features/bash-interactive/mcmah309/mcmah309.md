@@ -4,6 +4,8 @@
 description: "bash interactive module with mcmah309 flavor and useful tools"
 required_files:
   - setup_bash.sh
+requires:
+  - ../../curl.md
 ```
 ```Dockerfile
 COPY ./setup_bash.sh /tmp/

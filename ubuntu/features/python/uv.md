@@ -5,6 +5,8 @@ description: "uv for python and project management"
 args:
     optional:
         - version # e.g. 0.5.18
+requires:
+    - ../curl.md
 ```
 ```Dockerfile
 RUN apt-get update -y \
@@ -13,7 +15,6 @@ RUN apt-get update -y \
     build-essential \
     libssl-dev \
     pkg-config \
-    curl \
     && rm -rf /var/lib/apt/lists/*
 RUN \
 {% if version %}

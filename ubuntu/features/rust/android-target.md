@@ -1,3 +1,10 @@
+```yaml
+# yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
+
+description: "Rust targets for Android"
+requires:
+  - ./rustup.md
+```
 ```Dockerfile
 # https://dioxuslabs.com/learn/0.6/guides/mobile/
 

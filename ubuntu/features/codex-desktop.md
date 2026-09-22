@@ -2,12 +2,13 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "codex-desktop"
+requires:
+    - ./curl.md
 ```
 ```dockerfile
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
         ca-certificates \
-        curl \
         dbus \
         dbus-x11 \
         xdg-desktop-portal \

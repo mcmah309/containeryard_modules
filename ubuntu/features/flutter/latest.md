@@ -10,6 +10,9 @@ description: |
 args:
   optional:
     - flutter_version
+requires:
+  - ../curl.md
+  - ../android/sdk/sdk.md
 ```
 ```Dockerfile
 ARG flutter_ver={{ flutter_version | default (value="3.27.3") }}
@@ -31,7 +34,6 @@ RUN mkdir -p $FLUTTER_HOME \
 ## Install base tools required flutter tools https://docs.flutter.dev/get-started/install/linux#system-requirements
     && apt-get install -y --no-install-recommends --no-install-suggests \
     bash \
-    curl \
     file \
     git \
     # mkdir \
