@@ -3,27 +3,18 @@
 
 description: |
     jujustu version control (jj). https://github.com/jj-vcs/jj/releases
-    
-    Also installs git since jj currently depends on git as the backend and some commands are not possible in jj alone.
-
-    Volumes:
-    - ${HOME:-/root}:/.ssh
 args:
-    required:
-        - user_name
-        - email
     optional:
         - version # e.g `v0.35.0`
 requires:
     - ./curl.md
+    - ./git.md
 ```
 ```Dockerfile
 
 RUN apt-get update -y \
     && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends --no-install-suggests \
-    git \
-    openssh-client \
     {% if not version %}
     jq \
     {% endif %}
@@ -39,9 +30,4 @@ RUN \
     && mv jj /usr/local/bin/ \
     && rm jj.tar.gz \
     && jj --version
-RUN \
-    git config --global user.name {{ user_name }} \
-    && git config --global user.email {{ email }} \
-    && jj config set --user user.name {{ user_name }} \
-    && jj config set --user user.email {{ email }}
 ```
