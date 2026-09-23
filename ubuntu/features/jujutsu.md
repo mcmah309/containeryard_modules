@@ -4,6 +4,9 @@
 description: |
     jujustu version control (jj). https://github.com/jj-vcs/jj/releases
 args:
+    required:
+        - user_name
+        - email
     optional:
         - version # e.g `v0.35.0`
 requires:
@@ -30,4 +33,7 @@ RUN \
     && mv jj /usr/local/bin/ \
     && rm jj.tar.gz \
     && jj --version
+RUN \
+    jj config set --user user.name {{ user_name }} \
+    && jj config set --user user.email {{ email }}
 ```
