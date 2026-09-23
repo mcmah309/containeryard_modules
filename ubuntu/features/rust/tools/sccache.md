@@ -4,7 +4,13 @@
 description: "compiler caching tool for C/C++, Rust, and Cuda"
 requires:
   - ../rustup.md
+split: true
 ```
 ```Dockerfile
+FROM rustup-builder AS sccache-builder
+
 RUN cargo install sccache --locked
+```
+```Dockerfile
+COPY --from=sccache-builder /usr/local/cargo/bin/sccache /usr/local/cargo/bin/sccache
 ```

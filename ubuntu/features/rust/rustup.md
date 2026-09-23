@@ -10,11 +10,14 @@ description: |
 args:
   optional:
     - rust_version # For nightly, use "nightly"
+split: true
 ```
 ```Dockerfile
 # Based off: https://github.com/rust-lang/docker-rust/blob/b66cda4c654bc2f73a43a727563cf07cd26e9559/stable/bookworm/slim/Dockerfile
 
-ARG RUST_VERSION={{ components | default (value="1.97.1") }}
+FROM ubuntu:24.04 AS rustup-builder
+
+ARG RUST_VERSION={{ rust_version | default (value="1.97.1") }}
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH \
@@ -82,4 +85,14 @@ RUN set -eux; \
 
 # Fix for installing other toolchains: https://github.com/rust-lang/rustup/issues/4198#issuecomment-5078174007
 ENV RUSTUP_PERMIT_COPY_RENAME=1
+```
+```Dockerfile
+ARG RUST_VERSION={{ rust_version | default (value="1.97.1") }}
+COPY --from=rustup-builder /usr/local/rustup /usr/local/rustup
+COPY --from=rustup-builder /usr/local/cargo /usr/local/cargo
+ENV RUSTUP_HOME=/usr/local/rustup \
+    CARGO_HOME=/usr/local/cargo \
+    PATH=/usr/local/cargo/bin:$PATH \
+    RUST_VERSION=${RUST_VERSION} \
+    RUSTUP_PERMIT_COPY_RENAME=1
 ```

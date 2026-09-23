@@ -7,7 +7,14 @@ args:
     - components
 requires:
   - ./rustup.md
+split: true
 ```
 ```Dockerfile
+FROM rustup-builder AS rust-components-builder
+
 RUN rustup component add {{ components | default (value="rustfmt clippy") }}
+```
+```Dockerfile
+COPY --from=rust-components-builder /usr/local/rustup /usr/local/rustup
+COPY --from=rust-components-builder /usr/local/cargo /usr/local/cargo
 ```

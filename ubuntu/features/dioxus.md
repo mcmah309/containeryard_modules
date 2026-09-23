@@ -8,6 +8,13 @@ args:
 requires:
     - ./rust/rustup.md
     - ./curl.md
+split: true
+```
+```Dockerfile
+FROM rustup-builder AS dioxus-builder
+
+RUN cargo install cargo-binstall --locked \
+    && cargo binstall dioxus-cli {% if version %} --version {{version}} --force {% endif %}
 ```
 ```Dockerfile
 # From: https://dioxuslabs.com/learn/0.7/getting_started
@@ -23,6 +30,6 @@ RUN apt-get update -y \
     libayatana-appindicator3-dev \
     librsvg2-dev \
     && rm -rf /var/lib/apt/lists/*
-RUN cargo install cargo-binstall --locked \
-    && cargo binstall dioxus-cli {% if version %} --version {{version}} --force {% endif %}
+COPY --from=dioxus-builder /usr/local/cargo/bin/cargo-binstall /usr/local/cargo/bin/cargo-binstall
+COPY --from=dioxus-builder /usr/local/cargo/bin/dx /usr/local/cargo/bin/dx
 ```
