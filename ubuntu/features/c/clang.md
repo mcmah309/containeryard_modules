@@ -5,6 +5,9 @@ description: "clang development module"
 args:
     optional:
         - version
+requires:
+    - ../wget.md
+    - ../gpg.md
 ```
 ```Dockerfile
 {% if version %}
@@ -12,9 +15,7 @@ RUN apt-get update -y \
     && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends --no-install-suggests \
     lsb-release \
-    wget \
     software-properties-common \
-    gnupg \
     && wget https://apt.llvm.org/llvm.sh \
     && chmod +x llvm.sh \
     && ./llvm.sh {{ version }} \

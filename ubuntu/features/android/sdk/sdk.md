@@ -11,6 +11,10 @@ required_files:
     - license-accepter.sh
     - sshd-banner
     - supervisord.conf
+requires:
+    - ../../git.md
+    - ../../wget.md
+    - ../../unzip.md
 ```
 
 ```Dockerfile
@@ -20,7 +24,6 @@ ARG JDK_VERSION=17
 RUN apt-get update && \
     apt-get dist-upgrade -y && \
     apt-get install -y --no-install-recommends openjdk-${JDK_VERSION}-jdk && \
-    apt-get install -y --no-install-recommends git wget unzip && \
     apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # download and install Gradle

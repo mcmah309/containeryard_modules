@@ -12,16 +12,10 @@ args:
 requires:
     - ./curl.md
     - ./git.md
+    - ./jq.md
 ```
 ```Dockerfile
 
-RUN apt-get update -y \
-    && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends --no-install-suggests \
-    {% if not version %}
-    jq \
-    {% endif %}
-    && rm -rf /var/lib/apt/lists/*
 RUN \
     {% if version %}
     curl -L -o jj.tar.gz https://github.com/jj-vcs/jj/releases/download/{{ version }}/jj-{{ version }}-x86_64-unknown-linux-musl.tar.gz \

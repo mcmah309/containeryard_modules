@@ -8,6 +8,7 @@ args:
 requires:
     - ./rust/rustup.md
     - ./curl.md
+    - ./wget.md
 split: true
 ```
 ```Dockerfile
@@ -23,7 +24,6 @@ RUN apt-get update -y \
     && apt-get install -y --no-install-recommends --no-install-suggests \
     libwebkit2gtk-4.1-dev \
     build-essential \
-    wget \
     file \
     libxdo-dev \
     libssl-dev \

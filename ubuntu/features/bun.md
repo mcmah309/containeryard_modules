@@ -7,12 +7,8 @@ args:
         - version # e.g. `bun-v1.2.19`
 requires:
     - ./curl.md
+    - ./unzip.md
 ```
 ```Dockerfile
-RUN apt-get update -y \
-    && apt-get upgrade -y \
-    && apt-get install -y --no-install-recommends --no-install-suggests \
-    unzip \
-    && rm -rf /var/lib/apt/lists/*
 RUN curl -fsSL https://bun.com/install | bash {% if version %} -s "{{ version }}" {% endif %}
 ```

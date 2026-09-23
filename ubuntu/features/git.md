@@ -10,12 +10,13 @@ args:
   required:
     - user_name
     - email
+requires:
+  - ./openssh-client.md
 ```
 ```Dockerfile
 RUN apt-get update -y \
     && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends --no-install-suggests \
-    openssh-client \
     git \
     && rm -rf /var/lib/apt/lists/*
 RUN \
