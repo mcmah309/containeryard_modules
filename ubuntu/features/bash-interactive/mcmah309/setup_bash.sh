@@ -84,6 +84,10 @@ if [[ $- =~ .*i.* ]]; then bind '"\C-r": "\C-a hstr -- \C-j"'; fi
 if [[ $- =~ .*i.* ]]; then bind '"\C-xk": "\C-a hstr -k \C-j"'; fi
 export HSTR_TIOCSTI=y
 
+if [ "$(id -u)" -eq 0 ]; then
+    sudo() { "$@"; }
+fi
+
 alias l='ls -lah'
 alias fd=fdfind
 
