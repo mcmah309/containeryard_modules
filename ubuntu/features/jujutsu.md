@@ -13,6 +13,7 @@ requires:
     - path: ./curl.md
     - path: ./git.md
     - path: ./jq.md
+      when: "version is not defined or not version"
 ```
 ```Dockerfile name=main
 

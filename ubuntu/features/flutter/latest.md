@@ -15,6 +15,16 @@ requires:
   - path: ../android/sdk/sdk.md
   - path: ../xdg.md
 ```
+```bash name=install-chrome-wrapper
+set -euo pipefail
+original_chrome_path=$(command -v google-chrome)
+mv "$original_chrome_path" "${original_chrome_path}-bin"
+cat > /usr/bin/google-chrome <<CHROME_WRAPPER
+#!/bin/bash
+exec "${original_chrome_path}-bin" --no-sandbox --headless "\$@"
+CHROME_WRAPPER
+chmod +x /usr/bin/google-chrome
+```
 ```Dockerfile name=main
 ARG flutter_ver={{ flutter_version | default (value="3.27.3") }}
 
@@ -89,11 +99,8 @@ RUN mkdir -p $FLUTTER_HOME \
     && wget -q https://dl.google.com/linux/direct/google-chrome-stable_current_amd64.deb \
     && apt-get install -y ./google-chrome-stable_current_amd64.deb \
 
-## Create a google chrome executable that allows running as root. Used by flutter when lauching web apps.
-    && ORIGINAL_CHROME_PATH=$(which google-chrome) \
-    && mv "$ORIGINAL_CHROME_PATH" "${ORIGINAL_CHROME_PATH}-bin" \
-    && echo '#!/bin/bash\n'"${ORIGINAL_CHROME_PATH}-bin"' --no-sandbox --headless "$@"' > /usr/bin/google-chrome \
-    && chmod +x /usr/bin/google-chrome \
-
     && rm -rf /var/lib/apt/lists/*
+
+# Allow Flutter web apps to launch Chrome as root.
+RUN {{ script(name="install-chrome-wrapper") }}
 ```

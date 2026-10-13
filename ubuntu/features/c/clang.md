@@ -7,7 +7,9 @@ args:
         - version
 requires:
     - path: ../wget.md
+      when: "version is defined and version"
     - path: ../gpg.md
+      when: "version is defined and version"
 ```
 ```Dockerfile name=main
 {% if version %}

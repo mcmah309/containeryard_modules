@@ -14,6 +14,9 @@ args:
     - ndk
     - cmake
     - include_emulator
+  validate:
+    - assert: "include_emulator is not defined or include_emulator is bool"
+      message: "include_emulator must be true or false"
 requires:
   - path: ./sdk/sdk.md
 ```

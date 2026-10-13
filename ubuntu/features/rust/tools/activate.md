@@ -5,6 +5,9 @@ description: "Activate rust crate"
 args:
   optional:
     - add_bashrc_shortcut
+  validate:
+    - assert: "add_bashrc_shortcut is not defined or add_bashrc_shortcut is bool"
+      message: "add_bashrc_shortcut must be true or false"
 requires:
   - path: ../rustup.md
 ```

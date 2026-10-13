@@ -5,26 +5,37 @@ description: "codex-cli"
 args:
     optional:
         - no_sandbox
-        - notify # This requires the dbus feature. Containeryard 0.5.0 can handle this
+        - notify
+    validate:
+        - assert: "no_sandbox is not defined or no_sandbox is bool"
+          message: "no_sandbox must be true or false"
+        - assert: "notify is not defined or notify is bool"
+          message: "notify must be true or false"
 requires:
     - path: ./curl.md
+    - path: ./dbus.md
+      when: "notify is defined and notify == true"
+```
+```sh name=configure
+set -eu
+mkdir -p /root/.codex
+cat > /root/.codex/config.toml <<'CODEX_CONFIG'
+tui.alternate_screen = "never"
+{% if no_sandbox is defined and no_sandbox == true %}
+approval_policy = "never"
+sandbox_mode = "danger-full-access"
+{% endif %}
+{% if notify is defined and notify == true %}
+notify = ["sh", "-c", "notify-send \"Codex\" \"Turn complete\""]
+{% endif %}
+CODEX_CONFIG
 ```
 ```Dockerfile name=main
 RUN curl -fsSL https://chatgpt.com/codex/install.sh | sh
-{% if no_sandbox is defined and no_sandbox is not bool %}
-    {{ throw(message="no_sandbox must be true or false") }}
+{% if notify is defined and notify == true %}
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends libnotify-bin \
+    && rm -rf /var/lib/apt/lists/*
 {% endif %}
-
-{% set no_sandbox = no_sandbox | default(value=false) %}
-RUN mkdir -p /root/.codex \
-    && printf '%s\n' \
-        'tui.alternate_screen = "never"' \
-        {% if no_sandbox %}
-        'approval_policy = "never"' \
-        'sandbox_mode = "danger-full-access"' \
-        {% endif %}
-        {% if notify is defined and notify %}
-        'notify = ["sh", "-c", "notify-send \"Codex\" \"Turn complete\""]' \
-        {% endif %}
-    > /root/.codex/config.toml
+RUN {{ script(name="configure", template=true) }}
 ```

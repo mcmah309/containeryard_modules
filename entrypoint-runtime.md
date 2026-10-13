@@ -14,44 +14,48 @@ description: |
     without defining competing ENTRYPOINT instructions. Including this module sets the
     image ENTRYPOINT; the consuming output can redeclare the CMD.
 ```
+```sh name=install-entrypoint
+set -eu
+mkdir -p /usr/local/bin /usr/local/lib/containeryard/startup.d
+cat > /usr/local/bin/containeryard-entrypoint <<'ENTRYPOINT_SCRIPT'
+#!/bin/sh
+set -eu
+
+LOG_FILE=/tmp/containeryard-startup.log
+
+log() {
+    printf "[containeryard] %s\n" "$*" | tee -a "$LOG_FILE" >&2
+}
+
+log "Entrypoint started"
+
+for startup_script in /usr/local/lib/containeryard/startup.d/*; do
+    [ -x "$startup_script" ] || continue
+
+    log "Running: $startup_script"
+
+    if "$startup_script" >> "$LOG_FILE" 2>&1; then
+        log "Finished: $startup_script"
+    else
+        status=$?
+        log "Failed: $startup_script (exit code $status)"
+        exit "$status"
+    fi
+done
+
+log "Startup hooks completed"
+
+[ "$#" -gt 0 ] || {
+    log "No container command was configured"
+    exit 64
+}
+
+exec "$@"
+ENTRYPOINT_SCRIPT
+chmod 0755 /usr/local/bin/containeryard-entrypoint
+```
 ```Dockerfile name=main
-RUN mkdir -p /usr/local/bin /usr/local/lib/containeryard/startup.d \
-    && printf '%s\n' \
-        '#!/bin/sh' \
-        'set -eu' \
-        '' \
-        'LOG_FILE=/tmp/containeryard-startup.log' \
-        '' \
-        'log() {' \
-        '    printf "[containeryard] %s\n" "$*" | tee -a "$LOG_FILE" >&2' \
-        '}' \
-        '' \
-        'log "Entrypoint started"' \
-        '' \
-        'for startup_script in /usr/local/lib/containeryard/startup.d/*; do' \
-        '    [ -x "$startup_script" ] || continue' \
-        '' \
-        '    log "Running: $startup_script"' \
-        '' \
-        '    if "$startup_script" >> "$LOG_FILE" 2>&1; then' \
-        '        log "Finished: $startup_script"' \
-        '    else' \
-        '        status=$?' \
-        '        log "Failed: $startup_script (exit code $status)"' \
-        '        exit "$status"' \
-        '    fi' \
-        'done' \
-        '' \
-        'log "Startup hooks completed"' \
-        '' \
-        '[ "$#" -gt 0 ] || {' \
-        '    log "No container command was configured"' \
-        '    exit 64' \
-        '}' \
-        '' \
-        'exec "$@"' \
-        > /usr/local/bin/containeryard-entrypoint \
-    && chmod 0755 /usr/local/bin/containeryard-entrypoint
+RUN {{ script(name="install-entrypoint") }}
 
 ENTRYPOINT ["/usr/local/bin/containeryard-entrypoint"]
 CMD ["sleep", "infinity"]
