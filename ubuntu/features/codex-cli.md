@@ -16,14 +16,15 @@ RUN curl -fsSL https://chatgpt.com/codex/install.sh | sh
 {% endif %}
 
 {% set no_sandbox = no_sandbox | default(value=false) %}
-{% if no_sandbox %}
 RUN mkdir -p /root/.codex \
     && printf '%s\n' \
+        'tui.alternate_screen = "never"' \
+        {% if no_sandbox %}
         'approval_policy = "never"' \
         'sandbox_mode = "danger-full-access"' \
+        {% endif %}
         {% if notify is defined and notify %}
         'notify = ["sh", "-c", "notify-send \"Codex\" \"Turn complete\""]' \
         {% endif %}
     > /root/.codex/config.toml
-{% endif %}
 ```
