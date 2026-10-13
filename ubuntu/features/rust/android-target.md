@@ -1,11 +1,11 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "Rust targets for Android"
 requires:
-  - ./rustup.md
+  - path: ./rustup.md
 ```
-```Dockerfile
+```Dockerfile name=main
 # https://dioxuslabs.com/learn/0.6/guides/mobile/
 
 # aarch64-linux-android: Modern Android devices (64-bit ARM)

@@ -1,11 +1,11 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "GitHub CLI"
 requires:
-    - ./wget.md
+    - path: ./wget.md
 ```
-```Dockerfile
+```Dockerfile name=main
 RUN mkdir -p -m 755 /etc/apt/keyrings \
     && out=$(mktemp) \
     && wget -nv -O "$out" https://cli.github.com/packages/githubcli-archive-keyring.gpg \

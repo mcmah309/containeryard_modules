@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: |
@@ -10,11 +10,11 @@ args:
     optional:
         - version # e.g `v0.35.0`
 requires:
-    - ./curl.md
-    - ./git.md
-    - ./jq.md
+    - path: ./curl.md
+    - path: ./git.md
+    - path: ./jq.md
 ```
-```Dockerfile
+```Dockerfile name=main
 
 RUN \
     {% if version %}

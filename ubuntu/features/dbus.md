@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "D-Bus session support"
@@ -6,7 +6,7 @@ args:
     required:
         - register_startup_hook
 ```
-```Dockerfile
+```Dockerfile name=main
 {% if register_startup_hook is not bool %}
     {{ throw(message="register_startup_hook must be true or false") }}
 {% endif %}

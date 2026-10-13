@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "clang development module"
@@ -6,10 +6,10 @@ args:
     optional:
         - version
 requires:
-    - ../wget.md
-    - ../gpg.md
+    - path: ../wget.md
+    - path: ../gpg.md
 ```
-```Dockerfile
+```Dockerfile name=main
 {% if version %}
 RUN apt-get update -y \
     && apt-get upgrade -y \

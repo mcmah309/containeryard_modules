@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: |
@@ -15,9 +15,9 @@ args:
     - cmake
     - include_emulator
 requires:
-  - ./sdk/sdk.md
+  - path: ./sdk/sdk.md
 ```
-```Dockerfile
+```Dockerfile name=main
 # https://docs.flutter.dev/reference/supported-platforms
 # https://developer.android.com/tools/releases/platform-tools
 

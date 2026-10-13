@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: |
@@ -11,11 +11,11 @@ args:
   optional:
     - flutter_version
 requires:
-  - ../curl.md
-  - ../android/sdk/sdk.md
-  - ../xdg.md
+  - path: ../curl.md
+  - path: ../android/sdk/sdk.md
+  - path: ../xdg.md
 ```
-```Dockerfile
+```Dockerfile name=main
 ARG flutter_ver={{ flutter_version | default (value="3.27.3") }}
 
 ## Set environment variables

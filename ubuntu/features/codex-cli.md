@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "codex-cli"
@@ -7,9 +7,9 @@ args:
         - no_sandbox
         - notify # This requires the dbus feature. Containeryard 0.5.0 can handle this
 requires:
-    - ./curl.md
+    - path: ./curl.md
 ```
-```Dockerfile
+```Dockerfile name=main
 RUN curl -fsSL https://chatgpt.com/codex/install.sh | sh
 {% if no_sandbox is defined and no_sandbox is not bool %}
     {{ throw(message="no_sandbox must be true or false") }}

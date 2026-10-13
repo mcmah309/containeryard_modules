@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: |
@@ -17,11 +17,11 @@ args:
     optional:
         - display_backend
 requires:
-    - ./curl.md
-    - ./dbus.md
-    - ./xdg.md
+    - path: ./curl.md
+    - path: ./dbus.md
+    - path: ./xdg.md
 ```
-```dockerfile
+```dockerfile name=main
 {% set display_backend = display_backend | default(value="auto") %}
 {% if display_backend != "auto" and display_backend != "x11" and display_backend != "wayland" %}
     {{ throw(message="display_backend must be auto, x11, or wayland") }}

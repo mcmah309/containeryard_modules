@@ -1,11 +1,11 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "Node version manager"
 requires:
-    - ../curl.md
+    - path: ../curl.md
 ```
-```dockerfile
+```dockerfile name=main
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh | bash \
     && . ~/.bashrc \
     && nvm install --lts \

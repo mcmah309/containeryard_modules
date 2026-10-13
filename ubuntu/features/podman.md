@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: |
@@ -7,7 +7,7 @@ description: |
   Volumes:
   - /var/lib/containers #  Root podman containers location. (For users ~/.local/share/containers)
 ```
-```Dockerfile
+```Dockerfile name=main
 # Podman in Podman
 # Tips:
 # - Run outer with with `--privileged`

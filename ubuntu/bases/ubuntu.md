@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "Base ubuntu module."
@@ -6,7 +6,7 @@ args:
   optional:
     - version
 ```
-```Dockerfile
+```Dockerfile name=main
 FROM ubuntu:{{ version | default (value="latest") }}
 
 ENV HOME ${HOME:-/root}

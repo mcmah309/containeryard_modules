@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: |
@@ -14,7 +14,7 @@ description: |
     without defining competing ENTRYPOINT instructions. Including this module sets the
     image ENTRYPOINT; the consuming output can redeclare the CMD.
 ```
-```Dockerfile
+```Dockerfile name=main
 RUN mkdir -p /usr/local/bin /usr/local/lib/containeryard/startup.d \
     && printf '%s\n' \
         '#!/bin/sh' \

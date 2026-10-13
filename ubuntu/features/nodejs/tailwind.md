@@ -1,11 +1,11 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "Tailwind cli"
 requires:
-    - ./nvm.md
+    - path: ./nvm.md
 ```
-```Dockerfile
+```Dockerfile name=main
 RUN . ~/.bashrc  && { nvm use default 2>/dev/null || true; } && npm install -g tailwindcss @tailwindcss/cli
 ```
 

@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "Installs zigup and zig"
@@ -6,9 +6,9 @@ args:
     optional:
         - version
 requires:
-    - ./curl.md
+    - path: ./curl.md
 ```
-```Dockerfile
+```Dockerfile name=main
 RUN apt-get update -y \
     && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends --no-install-suggests \

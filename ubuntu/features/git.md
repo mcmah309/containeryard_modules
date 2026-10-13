@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: |
@@ -11,9 +11,9 @@ args:
     - user_name
     - email
 requires:
-  - ./openssh-client.md
+  - path: ./openssh-client.md
 ```
-```Dockerfile
+```Dockerfile name=main
 RUN apt-get update -y \
     && apt-get upgrade -y \
     && apt-get install -y --no-install-recommends --no-install-suggests \

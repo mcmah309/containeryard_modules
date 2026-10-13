@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "Dioxus. Also depends on cargo being installed."
@@ -6,18 +6,17 @@ args:
     optional:
     - version # e.g. `0.6.0-alpha.4` do not include the `v`
 requires:
-    - ./rust/rustup.md
-    - ./curl.md
-    - ./wget.md
-split: true
+    - path: ./rust/rustup.md
+    - path: ./curl.md
+    - path: ./wget.md
 ```
-```Dockerfile
+```Dockerfile name=build
 FROM rustup-builder AS dioxus-builder
 
 RUN cargo install cargo-binstall --locked \
     && cargo binstall dioxus-cli {% if version %} --version {{version}} --force {% endif %}
 ```
-```Dockerfile
+```Dockerfile name=main
 # From: https://dioxuslabs.com/learn/0.7/getting_started
 RUN apt-get update -y \
     && apt-get upgrade -y \

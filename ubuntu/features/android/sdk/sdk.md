@@ -1,23 +1,23 @@
 From: https://github.com/thyrlian/AndroidSDK/blob/dac590bf90e379280f1fc290d52496a96c2db5eb/android-sdk/Dockerfile
 
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "Android sdk dev env"
 # args:
 #   optional:
-required_files:
-    - accredited-keys/.gitignore
-    - license-accepter.sh
-    - sshd-banner
-    - supervisord.conf
+files:
+    - path: accredited-keys/.gitignore
+    - path: license-accepter.sh
+    - path: sshd-banner
+    - path: supervisord.conf
 requires:
-    - ../../git.md
-    - ../../wget.md
-    - ../../unzip.md
+    - path: ../../git.md
+    - path: ../../wget.md
+    - path: ../../unzip.md
 ```
 
-```Dockerfile
+```Dockerfile name=main
 # install Java
 # install essential tools
 ARG JDK_VERSION=17

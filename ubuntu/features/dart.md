@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: "Dart module"
@@ -7,7 +7,7 @@ args:
     - dart_version
     - channel
 ```
-```Dockerfile
+```Dockerfile name=main
 # https://dart.dev/get-dart#install-a-debian-package
 
 ARG dart_ver={{ dart_version | default (value="3.6.2") }}

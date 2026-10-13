@@ -1,4 +1,4 @@
-```yaml
+```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: |
@@ -10,9 +10,8 @@ description: |
 args:
   optional:
     - rust_version # For nightly, use "nightly"
-split: true
 ```
-```Dockerfile
+```Dockerfile name=build
 # Based off: https://github.com/rust-lang/docker-rust/blob/b66cda4c654bc2f73a43a727563cf07cd26e9559/stable/bookworm/slim/Dockerfile
 
 FROM ubuntu:24.04 AS rustup-builder
@@ -86,7 +85,7 @@ RUN set -eux; \
 # Fix for installing other toolchains: https://github.com/rust-lang/rustup/issues/4198#issuecomment-5078174007
 ENV RUSTUP_PERMIT_COPY_RENAME=1
 ```
-```Dockerfile
+```Dockerfile name=main
 ARG RUST_VERSION={{ rust_version | default (value="1.97.1") }}
 COPY --from=rustup-builder /usr/local/rustup /usr/local/rustup
 COPY --from=rustup-builder /usr/local/cargo /usr/local/cargo
