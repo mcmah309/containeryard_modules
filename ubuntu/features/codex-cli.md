@@ -5,6 +5,7 @@ description: "codex-cli"
 args:
     optional:
         - no_sandbox
+        - notify # This requires the dbus feature. Containeryard 0.5.0 can handle this
 requires:
     - ./curl.md
 ```
@@ -20,6 +21,9 @@ RUN mkdir -p /root/.codex \
     && printf '%s\n' \
         'approval_policy = "never"' \
         'sandbox_mode = "danger-full-access"' \
-        > /root/.codex/config.toml
+        {% if notify is defined and notify %}
+        'notify = ["sh", "-c", "notify-send \"Codex\" \"Turn complete\""]' \
+        {% endif %}
+    > /root/.codex/config.toml
 {% endif %}
 ```
