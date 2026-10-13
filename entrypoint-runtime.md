@@ -12,26 +12,47 @@ description: |
 
     This allows independent modules to initialize services and other runtime state
     without defining competing ENTRYPOINT instructions. Including this module sets the
-    image ENTRYPOINT; the consuming output remains responsible for declaring CMD.
+    image ENTRYPOINT; the consuming output can redeclare the CMD.
 ```
 ```Dockerfile
-RUN mkdir -p /usr/local/lib/containeryard/startup.d \
+RUN mkdir -p /usr/local/bin /usr/local/lib/containeryard/startup.d \
     && printf '%s\n' \
         '#!/bin/sh' \
         'set -eu' \
         '' \
+        'LOG_FILE=/tmp/containeryard-startup.log' \
+        '' \
+        'log() {' \
+        '    printf "[containeryard] %s\n" "$*" | tee -a "$LOG_FILE" >&2' \
+        '}' \
+        '' \
+        'log "Entrypoint started"' \
+        '' \
         'for startup_script in /usr/local/lib/containeryard/startup.d/*; do' \
         '    [ -x "$startup_script" ] || continue' \
-        '    "$startup_script"' \
+        '' \
+        '    log "Running: $startup_script"' \
+        '' \
+        '    if "$startup_script" >> "$LOG_FILE" 2>&1; then' \
+        '        log "Finished: $startup_script"' \
+        '    else' \
+        '        status=$?' \
+        '        log "Failed: $startup_script (exit code $status)"' \
+        '        exit "$status"' \
+        '    fi' \
         'done' \
         '' \
+        'log "Startup hooks completed"' \
+        '' \
         '[ "$#" -gt 0 ] || {' \
-        '    echo "No container command was configured" >&2' \
+        '    log "No container command was configured"' \
         '    exit 64' \
         '}' \
         '' \
         'exec "$@"' \
         > /usr/local/bin/containeryard-entrypoint \
     && chmod 0755 /usr/local/bin/containeryard-entrypoint
+
 ENTRYPOINT ["/usr/local/bin/containeryard-entrypoint"]
+CMD ["sleep", "infinity"]
 ```
