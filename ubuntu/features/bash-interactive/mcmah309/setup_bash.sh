@@ -19,7 +19,7 @@ apt-get update -y \
     fzf \
     && rm -rf /var/lib/apt/lists/*
 
-cat > "${HOME:-/root}/.bashrc" <<- 'EOM'
+cat >> "${HOME:-/root}/.bashrc" <<- 'EOM'
 # ensure synchronization between bash memory and history file
 export PROMPT_COMMAND="history -a; history -n; export HISTFILE=${HOME:-/root}/.bash_history"
 
