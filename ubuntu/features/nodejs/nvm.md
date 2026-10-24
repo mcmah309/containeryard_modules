@@ -7,7 +7,7 @@ requires:
 ```
 ```dockerfile name=main
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh | bash \
-    && . ~/.bashrc \
+    && . "$HOME/.nvm/nvm.sh" \
     && nvm install --lts \
     && node -v \
     && npm -v \
