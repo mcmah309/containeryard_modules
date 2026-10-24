@@ -2,7 +2,7 @@
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
 
 description: |
-    Nightly rust module
+    Rust toolchain module
 
     Volumes:
     - /usr/local/rustup
@@ -12,11 +12,11 @@ args:
     - rust_version # For nightly, use "nightly"
 ```
 ```Dockerfile name=build
-# Based off: https://github.com/rust-lang/docker-rust/blob/b66cda4c654bc2f73a43a727563cf07cd26e9559/stable/bookworm/slim/Dockerfile
+# Based off: https://github.com/rust-lang/docker-rust/blob/de3b3171ec576fd91eb8e28d3d37fa117b135fcb/stable/bookworm/slim/Dockerfile
 
-FROM ubuntu:24.04 AS rustup-builder
+FROM ubuntu:26.04 AS rustup-builder
 
-ARG RUST_VERSION={{ rust_version | default (value="1.97.1") }}
+ARG RUST_VERSION={{ rust_version | default (value="1.99.1") }}
 ENV RUSTUP_HOME=/usr/local/rustup \
     CARGO_HOME=/usr/local/cargo \
     PATH=/usr/local/cargo/bin:$PATH \
@@ -36,27 +36,23 @@ RUN set -eux; \
     case "$arch" in \
         'amd64') \
             rustArch='x86_64-unknown-linux-gnu'; \
-            rustupSha256='4acc9acc76d5079515b46346a485974457b5a79893cfb01112423c89aeb5aa10'; \
+            rustupSha256='5be191e8c70a5007074254cb74d78dbfdd25cd5a61c27de7b8e5410122ec24f4'; \
             ;; \
         'armhf') \
             rustArch='armv7-unknown-linux-gnueabihf'; \
-            rustupSha256='124e02253af9128f9e27ea1ac929cbb73cf44cf35469d0f594a1b62f7b71fea1'; \
+            rustupSha256='fb8cc6c0ff713fd405a6940c80138516da9b75e6649e280cb65342afa3dcf188'; \
             ;; \
         'arm64') \
             rustArch='aarch64-unknown-linux-gnu'; \
-            rustupSha256='9732d6c5e2a098d3521fca8145d826ae0aaa067ef2385ead08e6feac88fa5792'; \
+            rustupSha256='a9c168dbea81a84671c6b7a5c1795cb0eb699020110d107ddfca427bd797e697'; \
             ;; \
         'i386') \
             rustArch='i686-unknown-linux-gnu'; \
-            rustupSha256='5140e82096f96d1d8077f00eb312648e0e5106d101c9918d086f72cbc69bb3a1'; \
+            rustupSha256='01c158bbee6bf70a57bd2642349b6f70e0be8b98b366fc4bbe38dfe7f82e1acb'; \
             ;; \
         'ppc64el') \
             rustArch='powerpc64le-unknown-linux-gnu'; \
-            rustupSha256='4bfff85bd3967d988e14567aa9cc6ab0ea386f0ffeff0f9f14d23f0103bf1f97'; \
-            ;; \
-        's390x') \
-            rustArch='s390x-unknown-linux-gnu'; \
-            rustupSha256='66c2c132428b6b77803facb02cbdf33b89d20c00bd20da142be8cb651f2e7cd8'; \
+            rustupSha256='96d46b6164ff778288c789e7e94dd09ce55d35777043aabe4e7af1d99b04bd71'; \
             ;; \
         *) \
             echo >&2 "unsupported architecture: $arch"; \
@@ -64,7 +60,7 @@ RUN set -eux; \
             ;; \
     esac; \
     \
-    url="https://static.rust-lang.org/rustup/archive/1.29.0/${rustArch}/rustup-init"; \
+    url="https://static.rust-lang.org/rustup/archive/1.29.2/${rustArch}/rustup-init"; \
     wget --progress=dot:giga "$url"; \
     echo "${rustupSha256} *rustup-init" | sha256sum -c -; \
     \
@@ -86,7 +82,7 @@ RUN set -eux; \
 ENV RUSTUP_PERMIT_COPY_RENAME=1
 ```
 ```Dockerfile name=main
-ARG RUST_VERSION={{ rust_version | default (value="1.97.1") }}
+ARG RUST_VERSION={{ rust_version | default (value="1.99.1") }}
 COPY --from=rustup-builder /usr/local/rustup /usr/local/rustup
 COPY --from=rustup-builder /usr/local/cargo /usr/local/cargo
 ENV RUSTUP_HOME=/usr/local/rustup \

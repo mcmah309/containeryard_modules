@@ -4,7 +4,7 @@
 description: "Ubuntu module with cuda."
 ```
 ```Dockerfile name=main
-FROM nvidia/cuda:12.6.3-cudnn-devel-ubuntu24.04
+FROM nvidia/cuda:13.4.3-cudnn-devel-ubuntu26.04
 
 ENV HOME ${HOME:-/root}
 

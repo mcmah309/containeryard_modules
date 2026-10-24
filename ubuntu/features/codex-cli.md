@@ -31,7 +31,9 @@ notify = ["sh", "-c", "notify-send \"Codex\" \"Turn complete\""]
 CODEX_CONFIG
 ```
 ```Dockerfile name=main
-RUN curl -fsSL https://chatgpt.com/codex/install.sh | sh
+RUN curl -fsSL --retry 3 -o /tmp/codex-install.sh https://chatgpt.com/codex/install.sh \
+    && sh /tmp/codex-install.sh \
+    && rm /tmp/codex-install.sh
 {% if notify is defined and notify == true %}
 RUN apt-get update \
     && apt-get install -y --no-install-recommends libnotify-bin \
