@@ -6,10 +6,8 @@ requires:
     - path: ../curl.md
 ```
 ```dockerfile name=main
-ENV NVM_DIR=/root/.nvm
-
 RUN curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.5/install.sh | bash \
-    && . "$NVM_DIR/nvm.sh" \
+    && . ~/.bashrc \
     && nvm install --lts \
     && node -v \
     && npm -v \
