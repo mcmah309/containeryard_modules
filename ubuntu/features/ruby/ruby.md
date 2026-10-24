@@ -10,7 +10,8 @@ RUN apt-get update -y \
     ruby-full \
     build-essential \
     zlib1g-dev \
+    libyaml-dev \
     && rm -rf /var/lib/apt/lists/*
-ENV GEM_HOME ${HOME:-/root}/gems
-ENV PATH ${PATH}:${HOME:-/root}/gems/bin
+ENV GEM_HOME=${HOME:-/root}/gems
+ENV PATH=${GEM_HOME}/bin:${PATH}
 ```
