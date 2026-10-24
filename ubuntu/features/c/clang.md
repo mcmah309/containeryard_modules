@@ -54,6 +54,6 @@ RUN apt-get update -y \
     clang-tidy \
     lldb \
     lld \
-{% endif %}
+{% endif -%}
     && rm -rf /var/lib/apt/lists/*
 ```

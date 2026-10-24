@@ -9,7 +9,7 @@ args:
 ```Dockerfile name=main
 FROM ubuntu:{{ version | default (value="latest") }}
 
-ENV HOME ${HOME:-/root}
+ENV HOME=/root
 
 RUN apt-get update -y \
     && apt-get upgrade -y \
