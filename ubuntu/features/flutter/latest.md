@@ -67,7 +67,7 @@ RUN mkdir -p $FLUTTER_HOME \
 
 ## Linux downloads https://docs.flutter.dev/release/archive?tab=linux
 ## Download Flutter, extract it to the FLUTTER_HOME directory, and then remove the original file
-    && curl -O https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${flutter_ver}-stable.tar.xz \
+    && curl -fSL --retry 3 -O https://storage.googleapis.com/flutter_infra_release/releases/stable/linux/flutter_linux_${flutter_ver}-stable.tar.xz \
     && tar xf flutter_linux_${flutter_ver}-stable.tar.xz -C $FLUTTER_HOME --strip-components=1 \
     && rm flutter_linux_${flutter_ver}-stable.tar.xz \
 

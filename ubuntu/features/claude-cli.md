@@ -6,5 +6,8 @@ requires:
     - path: ./curl.md
 ```
 ```Dockerfile name=main
-RUN curl -fsSL https://claude.ai/install.sh | bash
+RUN curl -fsSL --retry 3 https://claude.ai/install.sh -o /tmp/install-claude.sh \
+    && bash /tmp/install-claude.sh \
+    && rm /tmp/install-claude.sh \
+    && /root/.local/bin/claude --version
 ```

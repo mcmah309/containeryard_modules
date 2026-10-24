@@ -18,9 +18,11 @@ RUN apt-get update -y \
     && rm -rf /var/lib/apt/lists/*
 RUN \
 {% if version %}
-    curl -LsSf https://astral.sh/uv/{{ version }}/install.sh | sh \
+    curl -LsSf --retry 3 https://astral.sh/uv/{{ version }}/install.sh -o /tmp/install-uv.sh \
 {% else %}
-    curl -LsSf https://astral.sh/uv/install.sh | sh \
+    curl -LsSf --retry 3 https://astral.sh/uv/install.sh -o /tmp/install-uv.sh \
 {% endif %}
-    && . $HOME/.local/bin/env
+    && sh /tmp/install-uv.sh \
+    && rm /tmp/install-uv.sh \
+    && "$HOME/.local/bin/uv" --version
 ```

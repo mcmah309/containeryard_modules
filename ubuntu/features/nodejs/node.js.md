@@ -11,7 +11,9 @@ requires:
 ```Dockerfile name=main
 # set to 4, 5, 6, ... as needed
 RUN v={{ version | default (value="24") }} \
-    && curl -sL https://deb.nodesource.com/setup_$v.x | bash - \
+    && curl -fsSL --retry 3 https://deb.nodesource.com/setup_$v.x -o /tmp/install-nodesource.sh \
+    && bash /tmp/install-nodesource.sh \
+    && rm /tmp/install-nodesource.sh \
     && apt install nodejs \
     && node -v \
     && npm -v \

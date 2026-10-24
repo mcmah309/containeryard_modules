@@ -9,5 +9,8 @@ requires:
     - path: ./curl.md
 ```
 ```Dockerfile name=main
-RUN curl -fsSL https://deno.land/install.sh | sh -s -- --yes {% if version %} && deno upgrade --version {{ version }} {% endif %}
+RUN curl -fsSL --retry 3 https://deno.land/install.sh -o /tmp/install-deno.sh \
+    && sh /tmp/install-deno.sh --yes \
+    && rm /tmp/install-deno.sh \
+    && /root/.deno/bin/deno --version {% if version %} && /root/.deno/bin/deno upgrade --version {{ version }} {% endif %}
 ```

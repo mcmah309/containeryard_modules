@@ -9,7 +9,7 @@ requires:
 RUN mkdir -p -m 755 /etc/apt/keyrings \
     && out=$(mktemp) \
     && wget -nv -O "$out" https://cli.github.com/packages/githubcli-archive-keyring.gpg \
-    && cat "$out" | tee /etc/apt/keyrings/githubcli-archive-keyring.gpg > /dev/null \
+    && install -m 0644 "$out" /etc/apt/keyrings/githubcli-archive-keyring.gpg \
     && rm -f "$out" \
     && chmod go+r /etc/apt/keyrings/githubcli-archive-keyring.gpg \
     && mkdir -p -m 755 /etc/apt/sources.list.d \

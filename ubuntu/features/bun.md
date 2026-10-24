@@ -10,5 +10,8 @@ requires:
     - path: ./unzip.md
 ```
 ```Dockerfile name=main
-RUN curl -fsSL https://bun.com/install | bash {% if version %} -s "{{ version }}" {% endif %}
+RUN curl -fsSL --retry 3 https://bun.com/install -o /tmp/install-bun.sh \
+    && bash /tmp/install-bun.sh {% if version %} "{{ version }}" {% endif %} \
+    && rm /tmp/install-bun.sh \
+    && /root/.bun/bin/bun --version
 ```

@@ -6,5 +6,8 @@ requires:
     - path: ./curl.md
 ```
 ```Dockerfile name=main
-RUN curl -fsSL https://gh.io/copilot-install | bash
+RUN curl -fsSL --retry 3 https://gh.io/copilot-install -o /tmp/install-copilot.sh \
+    && bash /tmp/install-copilot.sh \
+    && rm /tmp/install-copilot.sh \
+    && copilot --version
 ```
