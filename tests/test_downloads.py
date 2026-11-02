@@ -34,6 +34,8 @@ class DownloadTests(unittest.TestCase):
             "copilot": ("copilot-cli.md", {}),
             "bun": ("bun.md", {}),
             "bun-pinned": ("bun.md", {"version": "bun-v1.2.19"}),
+            "pulumi": ("pulumi.md", {}),
+            "pulumi-pinned": ("pulumi.md", {"version": "3.273.0"}),
             "deno": ("deno.md", {}),
             "deno-pinned": ("deno.md", {"version": "2.0.0"}),
             "turso": ("turso.md", {}),
@@ -83,7 +85,7 @@ class DownloadTests(unittest.TestCase):
                 source = (work / f"{name}.Containerfile").read_text()
                 source = "\n".join(line for line in source.splitlines() if line.strip() and not line.lstrip().startswith("#"))
                 instructions = re.findall(r"^RUN ((?:[^\n]*\\\n)*[^\n]*)", source, re.MULTILINE)
-                downloads = [instruction.replace("\\\n", " ") for instruction in instructions if re.search(r"\b(?:curl|wget)\s", instruction)]
+                downloads = [instruction.replace("\\\n", " ") for instruction in instructions if re.search(r"(?:^\s*|&&\s*)(?:curl|wget)\s", instruction.replace("\\\n", " "))]
                 self.assertTrue(downloads, name)
                 for instruction in downloads:
                     with self.subTest(module=name, command=instruction):
