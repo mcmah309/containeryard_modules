@@ -5,25 +5,37 @@ description: |
     Installs Codex Desktop.
 
     Runtime requirements:
-      - Forward DISPLAY and mount /tmp/.X11-unix for X11.
-      - Provide /dev/dri for hardware-accelerated graphics.
-      - When using Wayland, forward WAYLAND_DISPLAY and XDG_RUNTIME_DIR, and
-        mount XDG_RUNTIME_DIR at the same path inside the container.
+      - For X11, forward DISPLAY and mount /tmp/.X11-unix.
+      - For Wayland, forward WAYLAND_DISPLAY and XDG_RUNTIME_DIR, and mount
+        XDG_RUNTIME_DIR at the same path inside the container.
+      - For hardware acceleration, provide /dev/dri and compatible graphics
+        drivers inside the container.
 
-    The launcher defaults to automatic display backend selection without an
-    Ozone platform flag. Set display_backend to x11 or wayland to require a
-    specific display backend.
+    display_backend defaults to auto, which leaves display backend selection
+    to the app without an Ozone platform flag. Set it to x11 or wayland to
+    require a specific display backend.
+
+    software_rendering defaults to false. Set it to true to pass --disable-gpu
+    when the container's graphics path produces a blank window.
+
+    The verified settings for the affected container are display_backend:
+    wayland and software_rendering: true. Forward the host's actual
+    WAYLAND_DISPLAY value; the launcher does not infer a socket name.
 args:
     optional:
         - display_backend
+        - software_rendering
     validate:
         - assert: 'display_backend is not defined or display_backend in ["auto", "x11", "wayland"]'
           message: "display_backend must be auto, x11, or wayland"
+        - assert: "software_rendering is not defined or software_rendering is bool"
+          message: "software_rendering must be true or false"
 requires:
     - path: ./curl.md
     - path: ./dbus.md
     - path: ./xdg.md
 ```
+
 ```bash name=install-launcher
 set -euo pipefail
 {% set display_backend = display_backend | default(value="auto") %}
@@ -62,6 +74,9 @@ desktop_args=(--disable-dev-shm-usage)
 {% if display_backend != "auto" %}
 desktop_args+=(--ozone-platform={{ display_backend }})
 {% endif %}
+{% if software_rendering | default(value=false) %}
+desktop_args+=(--disable-gpu)
+{% endif %}
 # Chromium refuses to run as root without this flag.
 if (( EUID == 0 )); then
     desktop_args+=(--no-sandbox)
@@ -74,6 +89,7 @@ sed 's|^Exec=.*|Exec=/usr/local/bin/codex-desktop %U|' \
     /usr/share/applications/chatgpt.desktop \
     > /root/.local/share/applications/chatgpt.desktop
 ```
+
 ```dockerfile name=main
 RUN apt-get update \
     && apt-get install -y --no-install-recommends \
