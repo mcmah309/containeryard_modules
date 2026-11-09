@@ -11,8 +11,9 @@ description: |
       - For hardware acceleration, provide /dev/dri and compatible graphics
         drivers inside the container.
 
-    display_backend defaults to auto, which leaves display backend selection
-    to the app without an Ozone platform flag. Set it to x11 or wayland to
+    display_backend defaults to auto, which prefers Wayland when the socket
+    named by WAYLAND_DISPLAY is available. Otherwise, selection is left to
+    the app without an Ozone platform flag. Set it to x11 or wayland to
     require a specific display backend.
 
     software_rendering defaults to false. Set it to true to pass --disable-gpu
@@ -71,7 +72,16 @@ if ! dbus-send --session --print-reply --reply-timeout=2000 \
 fi
 
 desktop_args=(--disable-dev-shm-usage)
-{% if display_backend != "auto" %}
+{% if display_backend == "auto" %}
+# Prefer Wayland when its socket is available.
+wayland_socket="${WAYLAND_DISPLAY:-}"
+if [[ -n "$wayland_socket" && "$wayland_socket" != /* ]]; then
+    wayland_socket="${XDG_RUNTIME_DIR:-}/$wayland_socket"
+fi
+if [[ -n "${WAYLAND_DISPLAY:-}" && -S "$wayland_socket" ]]; then
+    desktop_args+=(--ozone-platform=wayland)
+fi
+{% else %}
 desktop_args+=(--ozone-platform={{ display_backend }})
 {% endif %}
 {% if software_rendering | default(value=false) %}
