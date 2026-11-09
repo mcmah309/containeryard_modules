@@ -6,7 +6,9 @@ importing a key. Chain each step with `&&`; piping a download into another
 command can hide the downloader's failure under Docker's default shell.
 Check the installed executable with `--version` when available.
 
-Run `python3 -m unittest discover -s tests -v` with `yard` on PATH to check
-all module downloads and simulate failures in rendered Containerfiles,
-including pinned and default installer versions. These checks need no network
-or Docker daemon.
+Install test dependencies with `python3 -m pip install -r tests/requirements.txt`,
+then run `python3 -m unittest discover -s tests -v` with `yard` on PATH.
+The tests automatically discover download recipes, supply synthetic required
+arguments, and test both default and explicitly supplied version arguments.
+No recipe list or per-recipe overrides are needed. The checks simulate download
+failures in rendered Containerfiles without a network or Docker daemon.
