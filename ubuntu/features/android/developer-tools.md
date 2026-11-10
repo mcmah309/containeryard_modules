@@ -3,6 +3,11 @@
 
 description: |
   Android utils.
+
+  include_emulator installs the emulator, an AVD, and its Qt/XCB runtime
+  libraries. Use emulator -avd pixel_7 -no-window for headless operation.
+  Graphical operation requires a reachable X11 display and its authentication
+  to be supplied at runtime; this module does not start a display server.
   
   Volumes:
   - ${HOME:-/root}/.gradle/caches
@@ -62,9 +67,20 @@ ENV ANDROID_NDK_HOME ${ANDROID_HOME}/ndk/${ndk}
 ENV NDK_HOME ${ANDROID_NDK_HOME}
 
 {% if include_emulator %}
+RUN apt-get update \
+    && apt-get install -y --no-install-recommends \
+        libxcb-cursor0 \
+        libxcb-icccm4 \
+        libxcb-image0 \
+        libxcb-keysyms1 \
+        libxcb-render-util0 \
+        libxcb-shape0 \
+    && apt-get clean && rm -rf /var/lib/apt/lists/*
+
 # `adb kill-server` may be needed.
 # `adb start-server` may be needed. `QT_QPA_PLATFORM=` for selecting platform
-# Run emulator e.g. `emulator -avd pixel_7_33 -no-audio`
+# Headless: `emulator -avd pixel_7 -no-window -no-audio`
+# Graphical: `emulator -avd pixel_7 -no-audio` (requires a working X11 display)
 RUN sdkmanager "system-images;${platform};google_apis;x86_64" "emulator" \
   && avdmanager create avd -n pixel_7 -k "system-images;${platform};google_apis;x86_64" --device "pixel_7"
 {% endif %}
