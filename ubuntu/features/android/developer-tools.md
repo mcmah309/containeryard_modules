@@ -4,14 +4,16 @@
 description: |
   Android utils.
 
-  include_emulator installs the emulator, an AVD, and its Qt/XCB runtime
-  libraries. Use emulator -avd pixel_7 -no-window for headless operation.
+  include_emulator installs the emulator, the selected platform's Google APIs
+  x86_64 system image, and Qt/XCB runtime libraries. Create an AVD at runtime
+  as the user who will run the emulator; no AVD is baked into the image.
   Graphical operation requires a reachable X11 display and its authentication
   to be supplied at runtime; this module does not start a display server.
   
   Volumes:
   - ${HOME:-/root}/.gradle/caches
   - /opt/android-sdk
+  - ${HOME:-/root}/.android/avd (when using the emulator)
 args:
   optional:
     - platform
@@ -79,9 +81,21 @@ RUN apt-get update \
 
 # `adb kill-server` may be needed.
 # `adb start-server` may be needed. `QT_QPA_PLATFORM=` for selecting platform
-# Headless: `emulator -avd pixel_7 -no-window -no-audio`
-# Graphical: `emulator -avd pixel_7 -no-audio` (requires a working X11 display)
-RUN sdkmanager "system-images;${platform};google_apis;x86_64" "emulator" \
-  && avdmanager create avd -n pixel_7 -k "system-images;${platform};google_apis;x86_64" --device "pixel_7"
+# Create an AVD at runtime before launching the emulator (see below).
+# Headless: `emulator -avd <name> -no-window -no-audio`
+# Graphical: `emulator -avd <name> -no-audio` (requires a working X11 display)
+RUN sdkmanager "system-images;${platform};google_apis;x86_64" "emulator"
 {% endif %}
 ```
+
+With `include_emulator: true`, create the AVD inside the running container as
+the user who will run it. For example, when built with `platform: android-34`:
+
+```sh
+avdmanager create avd -n pixel_7 -k "system-images;android-34;google_apis;x86_64" --device "pixel_7"
+emulator -avd pixel_7 -no-window -no-audio
+```
+
+Use the platform installed in the image and choose a device profile from
+`avdmanager list device`. Mount a writable volume at `$HOME/.android/avd` to
+retain the AVD and its data between containers; create it only on first use.
