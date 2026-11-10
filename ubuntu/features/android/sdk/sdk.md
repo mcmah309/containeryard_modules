@@ -1,4 +1,4 @@
-From: https://github.com/thyrlian/AndroidSDK/blob/dac590bf90e379280f1fc290d52496a96c2db5eb/android-sdk/Dockerfile
+From: https://github.com/thyrlian/AndroidSDK/blob/317b2273b6a4bb15e1219b3386f4a9e3b81a8245/android-sdk/Dockerfile
 
 ```yaml name=config
 # yaml-language-server: $schema=https://raw.githubusercontent.com/mcmah309/containeryard/master/src/schemas/yard-module-schema.json
@@ -59,12 +59,6 @@ ENV JAVA_HOME=/usr/lib/jvm/java-${JDK_VERSION}-openjdk-amd64
 ENV GRADLE_HOME=/opt/gradle
 ENV KOTLIN_HOME=/opt/kotlinc
 ENV PATH=${PATH}:${GRADLE_HOME}/bin:${KOTLIN_HOME}/bin:${ANDROID_HOME}/cmdline-tools/latest/bin:${ANDROID_HOME}/cmdline-tools/tools/bin:${ANDROID_HOME}/platform-tools:${ANDROID_HOME}/emulator
-# WORKAROUND: for issue https://issuetracker.google.com/issues/37137213
-ENV LD_LIBRARY_PATH=${ANDROID_HOME}/emulator/lib64:${ANDROID_HOME}/emulator/lib64/qt/lib
-# patch emulator issue: Running as root without --no-sandbox is not supported. See https://crbug.com/638180.
-# https://doc.qt.io/qt-5/qtwebengine-platform-notes.html#sandboxing-support
-ENV QTWEBENGINE_DISABLE_SANDBOX=1
-
 # accept the license agreements of the SDK components
 ADD license-accepter.sh /opt/
 RUN chmod +x /opt/license-accepter.sh && /opt/license-accepter.sh $ANDROID_HOME
